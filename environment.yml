@@ -1,7 +1,7 @@
 name: utonia
 channels:
   - pytorch
-  - nvidia/label/cuda-12.4.1
+  - nvidia/label/cuda-12.1.1
   - nvidia
   - conda-forge
   - defaults
@@ -15,7 +15,7 @@ dependencies:
   - pytorch=2.5.0
   - torchvision=0.20.0
   - torchaudio=2.5.0
-  - pytorch-cuda=12.4
+  - pytorch-cuda=12.1
   - numpy<=1.26.4  # for random seed
   - ninja
   - scipy
@@ -26,9 +26,9 @@ dependencies:
   - open3d  # for demo visualization
   - matplotlib  # for demo visualization
   - pip:
-    - torch-scatter --find-links https://data.pyg.org/whl/torch-2.5.0+cu124.html
+    - torch-scatter --find-links https://data.pyg.org/whl/torch-2.5.0+cu121.html
     - git+https://github.com/Dao-AILab/flash-attention.git
-    - spconv-cu124 
+    - spconv-cu121 
     - opencv-python
     - camtools
     - trimesh

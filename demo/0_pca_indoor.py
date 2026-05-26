@@ -27,8 +27,9 @@ device = "cuda" if torch.cuda.is_available() else "cpu"
 
 
 def get_pca_color(feat, brightness=1.25, center=True):
-    u, s, v = torch.pca_lowrank(feat, center=center, q=6, niter=5)
-    projection = feat @ v
+    feat_32 = feat.float()
+    u, s, v = torch.pca_lowrank(feat_32, center=center, q=6, niter=5)
+    projection = feat_32 @ v
     projection = projection[:, :3] * 0.6 + projection[:, 3:6] * 0.4
     min_val = projection.min(dim=-2, keepdim=True)[0]
     max_val = projection.max(dim=-2, keepdim=True)[0]
@@ -61,7 +62,7 @@ if __name__ == "__main__":
         )
         model = utonia.load(
             "utonia", repo_id="Pointcept/Utonia", custom_config=custom_config
-        ).to(device)
+        ).half().to(device)
     model.eval()
 
     # Load default data transform pipeline
@@ -86,6 +87,9 @@ if __name__ == "__main__":
         for key in point.keys():
             if isinstance(point[key], torch.Tensor) and device == "cuda":
                 point[key] = point[key].cuda(non_blocking=True)
+                # print("key: {}, shape: {}, device: {}, dtype: {}".format(key, point[key].shape, point[key].device, point[key].dtype))
+                if point[key].dtype == torch.float32:
+                    point[key] = point[key].half()
         # model forward:
         point = model(point)
         # upcast point feature
@@ -118,16 +122,16 @@ if __name__ == "__main__":
     pcd = o3d.geometry.PointCloud()
     pcd.points = o3d.utility.Vector3dVector(original_coord)
     pcd.colors = o3d.utility.Vector3dVector(original_pca_color.cpu().detach().numpy())
-    o3d.visualization.draw_geometries([pcd])
+    # o3d.visualization.draw_geometries([pcd])
     # or
     # o3d.visualization.draw_plotly([pcd])
 
-    # # Export PCA
-    # pcd = o3d.geometry.PointCloud()
-    # pcd.points = o3d.utility.Vector3dVector(original_coord)
-    # pcd.colors = o3d.utility.Vector3dVector(original_color)
-    # o3d.io.write_point_cloud("pc.ply", pcd)
-    # pcd = o3d.geometry.PointCloud()
-    # pcd.points = o3d.utility.Vector3dVector(original_coord)
-    # pcd.colors = o3d.utility.Vector3dVector(original_pca_color.cpu().detach().numpy())
-    # o3d.io.write_point_cloud("pca.ply", pcd)
+    # Export PCA
+    pcd = o3d.geometry.PointCloud()
+    pcd.points = o3d.utility.Vector3dVector(original_coord)
+    pcd.colors = o3d.utility.Vector3dVector(original_color)
+    o3d.io.write_point_cloud("pc.ply", pcd)
+    pcd = o3d.geometry.PointCloud()
+    pcd.points = o3d.utility.Vector3dVector(original_coord)
+    pcd.colors = o3d.utility.Vector3dVector(original_pca_color.cpu().detach().numpy())
+    o3d.io.write_point_cloud("pca.ply", pcd)
