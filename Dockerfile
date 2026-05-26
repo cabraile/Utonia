@@ -37,8 +37,5 @@ RUN pip install numpy scipy addict timm psutil huggingface_hub open3d matplotlib
 RUN pip install torch-scatter -f https://data.pyg.org/whl/torch-2.7.1+cu118.html
 RUN pip install spconv-cu118
 
-# Install Flash Attention (can take time)
-# RUN pip install flash-attn --no-build-isolation
-
 WORKDIR /workspace
 CMD ["/bin/bash"]
