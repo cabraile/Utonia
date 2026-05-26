@@ -1,3 +1,7 @@
+## Disclaimer
+This repository was forked from the [oficial Utonia repository](https://github.com/Pointcept/Utonia).
+It aims to run on an older laptop setup using a devcontainer.
+
 ## Installation
 This repo provide two ways of installation: **standalone mode** and **package mode**.
 - The **standalone mode** is recommended for users who want to use the code for quick inference and visualization. We provide a most easy way to install the environment by using `conda` environment file. The whole environment including `cuda` and `pytorch` can be easily installed by running the following command:
