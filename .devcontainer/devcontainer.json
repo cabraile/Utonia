@@ -1,0 +1,26 @@
+{
+  "name": "Utonia Dev Container",
+  "build": {
+    "dockerfile": "../Dockerfile",
+    "context": ".."
+  },
+  "workspaceFolder": "/workspace",
+  "remoteUser": "root",
+  "runArgs": ["--gpus", "all"],
+  "mounts": [
+    "source=${localEnv:HOME}/Workspace/Utonia,target=/workspace,type=bind",
+    "source=/media/braile/External-Cache/dataset/eccv-2026,target=/workspace/.data/eccv-2026,type=bind,consistency=cached"
+  ],
+  "containerEnv": {
+    "PYTHONUNBUFFERED": "1",
+    "O3D_HEADLESS": "1"
+  },
+  "settings": {
+    "terminal.integrated.shell.linux": "/bin/bash"
+  },
+  "extensions": [
+    "ms-python.python",
+    "ms-python.vscode-pylance"
+  ],
+  "postCreateCommand": "python -m pip install -U pip setuptools || true"
+}

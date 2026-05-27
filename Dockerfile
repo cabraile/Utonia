@@ -3,6 +3,7 @@ FROM nvidia/cuda:11.8.0-devel-ubuntu22.04
 
 ENV DEBIAN_FRONTEND=noninteractive
 ENV PYTHONUNBUFFERED=1
+ENV O3D_HEADLESS=1
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
@@ -12,15 +13,10 @@ RUN apt-get update && apt-get install -y \
     git \
     build-essential \
     ninja-build \
-    && ln -sf /usr/bin/python3.10 /usr/bin/python \
-    && rm -rf /var/lib/apt/lists/*
-
-# Drivers
-ENV O3D_HEADLESS=1
-RUN apt-get update && apt-get install -y \
     libgl1 \
     libglx-mesa0 \
     libx11-6 \
+    && ln -sf /usr/bin/python3.10 /usr/bin/python \
     && rm -rf /var/lib/apt/lists/*
 
 # Upgrade pip
@@ -33,7 +29,6 @@ RUN pip install torch==2.7.1 torchvision==0.22.1 torchaudio==2.7.1 --index-url h
 RUN pip install numpy scipy addict timm psutil huggingface_hub open3d matplotlib opencv-python camtools trimesh natsort gradio einops
 
 # 3. Install C++/CUDA extensions in order
-# Flash Attention often requires ninja and gcc to be present
 RUN pip install torch-scatter -f https://data.pyg.org/whl/torch-2.7.1+cu118.html
 RUN pip install spconv-cu118
 
